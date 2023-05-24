@@ -187,6 +187,8 @@ function upgradeCostFunc() {
 
 </script>
 
+<div class="version">v1.1</div>
+
 <div class="container">
   <div id="buttons-left">
     <h2>Upgrades</h2>
@@ -218,6 +220,14 @@ function upgradeCostFunc() {
 </div>
 
 <style>
+
+.version {
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    font-size: 1rem;
+  }
+
   .container {
     display: flex;
     justify-content: center;
