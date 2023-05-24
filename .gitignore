@@ -24,6 +24,6 @@ dist-ssr
 *.sw?
 
 /node_module/
-/public/build/
+# /public/build/
 
 .DS_Store
