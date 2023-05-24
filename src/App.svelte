@@ -5,7 +5,7 @@
 
   let count = 0;
   let totalCPS = 0;
-  let clickValue = 10000000;
+  let clickValue = 1;
 
   let buttons = [
     { id: 1, cost: 15, originalCost: 15, cps: 0.2, originalCps: 0.2, owned: 0 },
@@ -23,7 +23,7 @@
   let upgradeClick = { cost: 250, costMultiplier: 2.5, clickMultiplier: 2 };
   let upgradeMultiplier2 = { cost: 950, costMultiplier: 1.5, cpsMultiplier: 0 };
   let upgradeCost = { cost: 1750, costMultiplier: 1.5, costReduction: 0.00 };
-  let prestigeUpgrade = { cost: 100000000, costMultiplier: 2, cpsMultiplier: 0, owned: 0 };
+  let prestigeUpgrade = { cost: 10000000, costMultiplier: 10, cpsMultiplier: 0, owned: 0 };
 
   function roundToHundredths(value) {
     return Math.round(value * 100) / 100;
@@ -223,10 +223,10 @@ function prestigeUpgradeFunc() {
 <div class="container">
   <div id="buttons-left">
     <h2>Upgrades</h2>
-    <button on:click={upgradeClicker} class="upgradeButton">Upgrade Clicker x2 (Cost: {formatNumber(upgradeClick.cost)}) Power: {formatNumber(clickValue)}</button>
-    <button on:click={upgradeCps} class="upgradeButton">Increase CPS +2% (Cost: {formatNumber(upgradeMultiplier2.cost)}) Multiplier: +{Math.round(upgradeMultiplier2.cpsMultiplier * 100)}%</button>
-    <button on:click={upgradeCostFunc} class="upgradeButton">Reduce Costs -1% (Cost: {formatNumber(upgradeCost.cost)}) Reduction: -{Math.round(upgradeCost.costReduction * 100)}%</button>
-    <button on:click={prestigeUpgradeFunc} class="upgradeButton">Prestige +20% CPS (Cost: {formatNumber(prestigeUpgrade.cost)}) CPS Increase: +{Math.round(prestigeUpgrade.cpsMultiplier * 100)}%</button>
+    <button on:click={upgradeClicker} class="upgradeButton1">Upgrade Clicker x2 (Cost: {formatNumber(upgradeClick.cost)}) Power: {formatNumber(clickValue)}</button>
+    <button on:click={upgradeCps} class="upgradeButton2">Increase CPS +2% (Cost: {formatNumber(upgradeMultiplier2.cost)}) Multiplier: +{Math.round(upgradeMultiplier2.cpsMultiplier * 100)}%</button>
+    <button on:click={upgradeCostFunc} class="upgradeButton3">Reduce Costs -1% (Cost: {formatNumber(upgradeCost.cost)}) Reduction: -{Math.round(upgradeCost.costReduction * 100)}%</button>
+    <button on:click={prestigeUpgradeFunc} class="upgradeButton4">Prestige +20% CPS (Cost: {formatNumber(prestigeUpgrade.cost)}) CPS Increase: +{Math.round(prestigeUpgrade.cpsMultiplier * 100)}%</button>
   </div>
 
   <div class="center-content">
@@ -298,13 +298,39 @@ function prestigeUpgradeFunc() {
     background-color: #dfdfdf;
   }
 
-  .upgradeButton {
+  .upgradeButton1 {
     width: 30rem;
     border: 1px solid black;
     padding: 0.5rem;
     background-color: #dfdfdf;
     margin-bottom: 0.5rem;
   }
+
+  .upgradeButton2 {
+    width: 30rem;
+    border: 1px solid black;
+    padding: 0.5rem;
+    background-color: #dfdfdf;
+    margin-bottom: 0.5rem;
+  }
+
+  .upgradeButton3 {
+    width: 30rem;
+    border: 1px solid black;
+    padding: 0.5rem;
+    background-color: #dfdfdf;
+    margin-bottom: 0.5rem;
+  }
+
+  .upgradeButton4 {
+    width: 30rem;
+    border: 1px solid black;
+    padding: 0.5rem;
+    background-color: #dfdfdf;
+    margin-bottom: 0.5rem;
+  }
+
+
 
   .button1 {
     width: 30rem;
