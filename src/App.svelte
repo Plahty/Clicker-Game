@@ -218,7 +218,7 @@ function prestigeUpgradeFunc() {
 
 </script>
 
-<div class="version">v1.1</div>
+<div class="version">v1.2</div>
 
 <div class="container">
   <div id="buttons-left">
