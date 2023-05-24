@@ -25,6 +25,11 @@
   let upgradeCost = { cost: 1750, costMultiplier: 2.25, costReduction: 0.00 };
   let prestigeUpgrade = { cost: 1000000, costMultiplier: 10, cpsMultiplier: 0, owned: 0 };
 
+  function canAfford(cost) {
+    return count >= cost * 1; // Check if count is at least 50% of the cost
+  }
+
+
   function roundToHundredths(value) {
     return Math.round(value * 100) / 100;
   }
@@ -235,10 +240,18 @@ function prestigeUpgradeFunc() {
 <div class="container">
   <div id="buttons-left">
     <h2>Upgrades</h2>
-    <button on:click={upgradeClicker} class="upgradeButton1">Upgrade Clicker x2 (Cost: {formatNumber(upgradeClick.cost)}) Power: {formatNumber(clickValue)}</button>
-    <button on:click={upgradeCps} class="upgradeButton2">Increase CPS +2% (Cost: {formatNumber(upgradeMultiplier2.cost)}) Multiplier: +{Math.round(upgradeMultiplier2.cpsMultiplier * 100)}%</button>
-    <button on:click={upgradeCostFunc} class="upgradeButton3">Reduce Costs -2% (Cost: {formatNumber(upgradeCost.cost)}) Reduction: -{Math.round(upgradeCost.costReduction * 100)}%</button>
-    <button on:click={prestigeUpgradeFunc} class="upgradeButton4">Prestige +20% CPS (Cost: {formatNumber(prestigeUpgrade.cost)}) CPS Increase: +{Math.round(prestigeUpgrade.cpsMultiplier * 100)}%</button>
+    <button on:click={upgradeClicker} class="upgradeButton1">
+      Upgrade Clicker x2 (Cost: <span class={canAfford(upgradeClick.cost) ? '' : 'insufficient-funds'}>{formatNumber(upgradeClick.cost)}</span>) Power: {formatNumber(clickValue)}
+    </button>
+    <button on:click={upgradeCps} class="upgradeButton2">
+      Increase CPS +2% (Cost: <span class={canAfford(upgradeMultiplier2.cost) ? '' : 'insufficient-funds'}>{formatNumber(upgradeMultiplier2.cost)}</span>) Multiplier: +{Math.round(upgradeMultiplier2.cpsMultiplier * 100)}%
+    </button>
+    <button on:click={upgradeCostFunc} class="upgradeButton3">
+      Reduce Costs -2% (Cost: <span class={canAfford(upgradeCost.cost) ? '' : 'insufficient-funds'}>{formatNumber(upgradeCost.cost)}</span>) Reduction: -{Math.round(upgradeCost.costReduction * 100)}%
+    </button>
+    <button on:click={prestigeUpgradeFunc} class="upgradeButton4">
+      Prestige +20% CPS (Cost: <span class={canAfford(prestigeUpgrade.cost) ? '' : 'insufficient-funds'}>{formatNumber(prestigeUpgrade.cost)}</span>) CPS Increase: +{Math.round(prestigeUpgrade.cpsMultiplier * 100)}%
+    </button>
   </div>
 
   <div class="center-content">
@@ -246,24 +259,48 @@ function prestigeUpgradeFunc() {
     <h2 class="cps">{formatNumber(totalCPS)} CPS</h2>
     <h3 class="count">{formatNumber(count)} Clicks</h3>
     <button class="click-me" on:click={increment}>Click me</button>
-</div>
+  </div>
 
   <div id="buttons-right">
     <h2>Store</h2>
-    <button on:click={buyButton1} class="button1">Clicker 1 (Cost: {formatNumber(buttons[0].cost)}, CPS: {formatNumber(buttons[0].cps)}, Owned: {buttons[0].owned})</button>
-    <button on:click={buyButton2} class="button2">Clicker 2 (Cost: {formatNumber(buttons[1].cost)}, CPS: {formatNumber(buttons[1].cps)}, Owned: {buttons[1].owned})</button>
-    <button on:click={buyButton3} class="button3">Clicker 3 (Cost: {formatNumber(buttons[2].cost)}, CPS: {formatNumber(buttons[2].cps)}, Owned: {buttons[2].owned})</button>
-    <button on:click={buyButton4} class="button4">Clicker 4 (Cost: {formatNumber(buttons[3].cost)}, CPS: {formatNumber(buttons[3].cps)}, Owned: {buttons[3].owned})</button>
-    <button on:click={buyButton5} class="button5">Clicker 5 (Cost: {formatNumber(buttons[4].cost)}, CPS: {formatNumber(buttons[4].cps)}, Owned: {buttons[4].owned})</button>
-    <button on:click={buyButton6} class="button6">Clicker 6 (Cost: {formatNumber(buttons[5].cost)}, CPS: {formatNumber(buttons[5].cps)}, Owned: {buttons[5].owned})</button>
-    <button on:click={buyButton7} class="button7">Clicker 7 (Cost: {formatNumber(buttons[6].cost)}, CPS: {formatNumber(buttons[6].cps)}, Owned: {buttons[6].owned})</button>
-    <button on:click={buyButton8} class="button8">Clicker 8 (Cost: {formatNumber(buttons[7].cost)}, CPS: {formatNumber(buttons[7].cps)}, Owned: {buttons[7].owned})</button>
-    <button on:click={buyButton9} class="button9">Clicker 9 (Cost: {formatNumber(buttons[8].cost)}, CPS: {formatNumber(buttons[8].cps)}, Owned: {buttons[8].owned})</button>
-    <button on:click={buyButton10} class="button10">Clicker 10 (Cost: {formatNumber(buttons[9].cost)}, CPS: {formatNumber(buttons[9].cps)}, Owned: {buttons[9].owned})</button>
+    <button on:click={buyButton1} class="button1">
+      Clicker 1 (Cost: <span class={canAfford(buttons[0].cost) ? '' : 'insufficient-funds'}>{formatNumber(buttons[0].cost)}</span>, CPS: {formatNumber(buttons[0].cps)}, Owned: {buttons[0].owned})
+    </button>
+    <button on:click={buyButton2} class="button2">
+      Clicker 2 (Cost: <span class={canAfford(buttons[1].cost) ? '' : 'insufficient-funds'}>{formatNumber(buttons[1].cost)}</span>, CPS: {formatNumber(buttons[1].cps)}, Owned: {buttons[1].owned})
+    </button>
+    <button on:click={buyButton3} class="button3">
+      Clicker 3 (Cost: <span class={canAfford(buttons[2].cost) ? '' : 'insufficient-funds'}>{formatNumber(buttons[2].cost)}</span>, CPS: {formatNumber(buttons[2].cps)}, Owned: {buttons[2].owned})
+    </button>
+    <button on:click={buyButton4} class="button4">
+      Clicker 4 (Cost: <span class={canAfford(buttons[3].cost) ? '' : 'insufficient-funds'}>{formatNumber(buttons[3].cost)}</span>, CPS: {formatNumber(buttons[3].cps)}, Owned: {buttons[3].owned})
+    </button>
+    <button on:click={buyButton5} class="button5">
+      Clicker 5 (Cost: <span class={canAfford(buttons[4].cost) ? '' : 'insufficient-funds'}>{formatNumber(buttons[4].cost)}</span>, CPS: {formatNumber(buttons[4].cps)}, Owned: {buttons[4].owned})
+    </button>
+    <button on:click={buyButton6} class="button6">
+      Clicker 6 (Cost: <span class={canAfford(buttons[5].cost) ? '' : 'insufficient-funds'}>{formatNumber(buttons[5].cost)}</span>, CPS: {formatNumber(buttons[5].cps)}, Owned: {buttons[5].owned})
+    </button>
+    <button on:click={buyButton7} class="button7">
+      Clicker 7 (Cost: <span class={canAfford(buttons[6].cost) ? '' : 'insufficient-funds'}>{formatNumber(buttons[6].cost)}</span>, CPS: {formatNumber(buttons[6].cps)}, Owned: {buttons[6].owned})
+    </button>
+    <button on:click={buyButton8} class="button8">
+      Clicker 8 (Cost: <span class={canAfford(buttons[7].cost) ? '' : 'insufficient-funds'}>{formatNumber(buttons[7].cost)}</span>, CPS: {formatNumber(buttons[7].cps)}, Owned: {buttons[7].owned})
+    </button>
+    <button on:click={buyButton9} class="button9">
+      Clicker 9 (Cost: <span class={canAfford(buttons[8].cost) ? '' : 'insufficient-funds'}>{formatNumber(buttons[8].cost)}</span>, CPS: {formatNumber(buttons[8].cps)}, Owned: {buttons[8].owned})
+    </button>
+    <button on:click={buyButton10} class="button10">
+      Clicker 10 (Cost: <span class={canAfford(buttons[9].cost) ? '' : 'insufficient-funds'}>{formatNumber(buttons[9].cost)}</span>, CPS: {formatNumber(buttons[9].cps)}, Owned: {buttons[9].owned})
+    </button>
   </div>
 </div>
 
 <style>
+
+  .insufficient-funds {
+    color: rgb(200, 0, 0);
+  }
 
 .version {
     position: fixed;
