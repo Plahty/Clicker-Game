@@ -5,24 +5,25 @@
 
   let count = 0;
   let totalCPS = 0;
-  let clickValue = 1;
+  let clickValue = 10000000;
 
   let buttons = [
-    { id: 1, cost: 15, cps: 0.2, owned: 0 },
-    { id: 2, cost: 100, cps: 1, owned: 0 },
-    { id: 3, cost: 625, cps: 5, owned: 0 },
-    { id: 4, cost: 3000, cps: 20, owned: 0 },
-    { id: 5, cost: 9625, cps: 55, owned: 0 },
-    { id: 6, cost: 39000, cps: 195, owned: 0 },
-    { id: 7, cost: 123750, cps: 550, owned: 0 },
-    { id: 8, cost: 437500, cps: 1750, owned: 0 },
-    { id: 9, cost: 1787500, cps: 6500, owned: 0 },
-    { id: 10, cost: 9999900, cps: 33333, owned: 0 },
+    { id: 1, cost: 15, originalCost: 15, cps: 0.2, originalCps: 0.2, owned: 0 },
+    { id: 2, cost: 100, originalCost: 100, cps: 1, originalCps: 1, owned: 0 },
+    { id: 3, cost: 625, originalCost: 625, cps: 5, originalCps: 5, owned: 0 },
+    { id: 4, cost: 3000, originalCost: 3000, cps: 20, originalCps: 20, owned: 0 },
+    { id: 5, cost: 9625, originalCost: 9625, cps: 55, originalCps: 55, owned: 0 },
+    { id: 6, cost: 39000, originalCost: 39000, cps: 195, originalCps: 195, owned: 0 },
+    { id: 7, cost: 123750, originalCost: 123750, cps: 550, originalCps: 550, owned: 0 },
+    { id: 8, cost: 437500, originalCost: 437500, cps: 1750, originalCps: 1750, owned: 0 },
+    { id: 9, cost: 1787500, originalCost: 1787500, cps: 6500, originalCps: 6500, owned: 0 },
+    { id: 10, cost: 9999900, originalCost: 9999900, cps: 33333, originalCps: 33333, owned: 0 },
   ];
 
-  let upgradeClick = { cost: 250, costMultiplier: 2, clickMultiplier: 2 };
-  let upgradeMultiplier2 = { cost: 950, costMultiplier: 1.5, cpsMultiplier: 1.00 };
+  let upgradeClick = { cost: 250, costMultiplier: 2.5, clickMultiplier: 2 };
+  let upgradeMultiplier2 = { cost: 950, costMultiplier: 1.5, cpsMultiplier: 0 };
   let upgradeCost = { cost: 1750, costMultiplier: 1.5, costReduction: 0.00 };
+  let prestigeUpgrade = { cost: 100000000, costMultiplier: 2, cpsMultiplier: 0, owned: 0 };
 
   function roundToHundredths(value) {
     return Math.round(value * 100) / 100;
@@ -42,6 +43,7 @@
     clickValue = roundToHundredths(clickValue);
     upgradeClick.cost = roundToHundredths(upgradeClick.cost);
     upgradeMultiplier2.cost = roundToHundredths(upgradeMultiplier2.cost);
+    prestigeUpgrade.cost = roundToHundredths(prestigeUpgrade.cost);
     buttons = buttons.map(button => ({
       ...button,
       cost: roundToHundredths(button.cost),
@@ -64,25 +66,54 @@
   if (count >= upgradeMultiplier2.cost) {
     count -= upgradeMultiplier2.cost;
     upgradeMultiplier2.cost *= upgradeMultiplier2.costMultiplier;
-    upgradeMultiplier2.cpsMultiplier += 0.02; // Increment cpsMultiplier
+    upgradeMultiplier2.cpsMultiplier += 0.02; // Increment cpsMultiplier by 0.02
+
     buttons = buttons.map(button => ({
       ...button,
-      cps: button.cps * upgradeMultiplier2.cpsMultiplier,
+      cps: button.cps * (1 + upgradeMultiplier2.cpsMultiplier), // Apply percentage increase to the current CPS
     }));
   }
 }
 
 function upgradeCostFunc() {
-    if (count >= upgradeCost.cost) {
-      count -= upgradeCost.cost;
-      upgradeCost.cost *= upgradeCost.costMultiplier; // Re-add this line
-      upgradeCost.costReduction += 0.01; // Increment costReduction
-      buttons = buttons.map(button => ({
-        ...button,
-        cost: button.cost * (1 - upgradeCost.costReduction),
-      }));
-    }
+  if (count >= upgradeCost.cost) {
+    count -= upgradeCost.cost;
+    upgradeCost.cost *= upgradeCost.costMultiplier;
+    upgradeCost.costReduction += 0.01; // Increment costReduction
+
+    buttons = buttons.map(button => ({
+      ...button,
+      cost: button.cost * (1 - upgradeCost.costReduction), // Apply cost reduction to the current cost
+    }));
   }
+}
+
+function prestigeUpgradeFunc() {
+  if (count >= prestigeUpgrade.cost) {
+    count -= prestigeUpgrade.cost;
+    prestigeUpgrade.owned += 1;
+    prestigeUpgrade.cost *= prestigeUpgrade.costMultiplier;
+    prestigeUpgrade.cpsMultiplier += 0.2;
+
+    // Reset upgrades
+    upgradeClick.clickMultiplier = 2;
+    upgradeClick.cost = 250;
+    upgradeMultiplier2.cpsMultiplier = 0;  // Reset to 0
+    upgradeMultiplier2.cost = 950;
+    upgradeCost.costReduction = 0.00;
+    upgradeCost.cost = 1750;
+
+    buttons = buttons.map(button => ({
+      ...button,
+      owned: 0,
+      cost: button.originalCost,  // Reset to original cost
+      cps: button.originalCps * (1 + prestigeUpgrade.cpsMultiplier), // Apply new cpsMultiplier to the original CPS
+    }));
+
+    // Reset click power
+    clickValue = 1;
+  }
+}
 
   function buyButton1() {
     let button = buttons[0];
@@ -176,7 +207,7 @@ function upgradeCostFunc() {
 
   onMount(() => {
     let interval = setInterval(() => {
-      totalCPS = buttons.reduce((sum, button) => sum + button.owned * button.cps, 0);
+      totalCPS = buttons.reduce((sum, button) => sum + button.owned * button.cps * (1 + prestigeUpgrade.cpsMultiplier), 0);
       count += totalCPS / 10;
     }, 100);
 
@@ -192,9 +223,10 @@ function upgradeCostFunc() {
 <div class="container">
   <div id="buttons-left">
     <h2>Upgrades</h2>
-    <button on:click={upgradeClicker} class="upgradeButton">Upgrade Clicker (Cost: {formatNumber(upgradeClick.cost)}) Power: {formatNumber(clickValue)}</button>
-    <button on:click={upgradeCps} class="upgradeButton">Increase CPS +2% (Cost: {formatNumber(upgradeMultiplier2.cost)}) Multiplier: +{Math.round((upgradeMultiplier2.cpsMultiplier - 1) * 100)}%</button>
+    <button on:click={upgradeClicker} class="upgradeButton">Upgrade Clicker x2 (Cost: {formatNumber(upgradeClick.cost)}) Power: {formatNumber(clickValue)}</button>
+    <button on:click={upgradeCps} class="upgradeButton">Increase CPS +2% (Cost: {formatNumber(upgradeMultiplier2.cost)}) Multiplier: +{Math.round(upgradeMultiplier2.cpsMultiplier * 100)}%</button>
     <button on:click={upgradeCostFunc} class="upgradeButton">Reduce Costs -1% (Cost: {formatNumber(upgradeCost.cost)}) Reduction: -{Math.round(upgradeCost.costReduction * 100)}%</button>
+    <button on:click={prestigeUpgradeFunc} class="upgradeButton">Prestige +20% CPS (Cost: {formatNumber(prestigeUpgrade.cost)}) CPS Increase: +{Math.round(prestigeUpgrade.cpsMultiplier * 100)}%</button>
   </div>
 
   <div class="center-content">
