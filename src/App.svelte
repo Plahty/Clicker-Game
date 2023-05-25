@@ -3,7 +3,7 @@
 
   let count = 0;
   let totalCPS = 0;
-  let clickValue = 1000;
+  let clickValue = 1;
 
   $: document.title = `${formatNumber(count)} Clicks`;
 
@@ -23,11 +23,12 @@
   let upgradeClick = { cost: 250, costMultiplier: 2.5, clickMultiplier: 2 };
   let upgradeMultiplier2 = { cost: 950, costMultiplier: 2.25, cpsMultiplier: 0 };
   let upgradeCost = { cost: 1750, costMultiplier: 2.25, costReduction: 0.00 };
-  let prestigeUpgrade = { cost: 1000000, costMultiplier: 10, cpsMultiplier: 0, owned: 0 };
+  let prestigeUpgrade = { cost: 1000000, costMultiplier: 5, cpsMultiplier: 0, owned: 0 };
 
   function canAfford(cost) {
-    return count >= cost * 1; // Check if count is 100% of the cost
+    return count >= cost;
   }
+
 
   function roundToHundredths(value) {
     return Math.round(value * 100) / 100;
@@ -321,25 +322,25 @@ function prestigeUpgradeFunc() {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 1rem;
+    padding: 1.5rem;
   }
 
   .title {
     font-size: 2.5rem;
     margin: 1rem;
-    min-width: 16rem;
+    min-width: 20rem;
   }
 
   .cps {
     font-size: 1.2rem;
     margin: 0rem;
-    min-width: 15rem;
+    min-width: 20rem;
   }
 
   .count{
     font-size: 1.2rem;
     margin: 1rem;
-    min-width: 15rem;
+    min-width: 20rem;
   }
 
   .click-me{
@@ -466,8 +467,8 @@ function prestigeUpgradeFunc() {
     display: flex;
     flex-direction: column;
     align-self: flex-start;
-    padding: 2rem;
-    margin-top: 3rem;
+    padding: 0rem;
+    margin-top: 5rem;
   }
 
   h1 {
