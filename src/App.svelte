@@ -1,11 +1,11 @@
 <script>
   import { onMount, beforeUpdate } from 'svelte';
 
-  $: document.title = `${formatNumber(count)} Clicks`;
-
   let count = 0;
   let totalCPS = 0;
-  let clickValue = 1;
+  let clickValue = 1000;
+
+  $: document.title = `${formatNumber(count)} Clicks`;
 
   let buttons = [
     { id: 1, cost: 15, originalCost: 15, initialCost: 15, cps: 0.2, originalCps: 0.2, owned: 0 },
@@ -26,9 +26,8 @@
   let prestigeUpgrade = { cost: 1000000, costMultiplier: 10, cpsMultiplier: 0, owned: 0 };
 
   function canAfford(cost) {
-    return count >= cost * 1; // Check if count is at least 50% of the cost
+    return count >= cost * 1; // Check if count is 100% of the cost
   }
-
 
   function roundToHundredths(value) {
     return Math.round(value * 100) / 100;
@@ -117,8 +116,9 @@ function prestigeUpgradeFunc() {
       originalCost: button.initialCost, // Reset originalCost to its initial value
     }));
 
-    // Reset click power
+    // Reset click power and clicks
     clickValue = 1;
+    count = 0;
   }
 }
 
